@@ -4,11 +4,17 @@ block content
   h1= "My todos"
   p Welcome to #{title}
   
-  script(src='/javascripts/client.js')
 
     form#todo-form
       input#input-name(type='text' name='name' placeholder='Name')
       input#input-task(type='text' name='todo' placeholder='Todo')
       button#submit-data(type='submit') Submit
       div#response
-  
+
+    div#search-form
+      input#search-name(type='text' name='name' placeholder='Search Name')
+      button#search(type='button') Search
+    div#search-response
+
+
+  script(src='/javascripts/client.js')

@@ -22,5 +22,16 @@ router.post('/todo', (req, res) => {
   }
 });
 
+router.get('/user/:id', (req, res) => {
+  const name = req.params.id;
+  const todo = data.find(u => u.name === name);
+
+  if (todo) {
+      res.json(todo);
+  } else {
+    res.status(404).json({ message: 'User not found' });
+  }
+  console.log(name,todo);
+});
 
 module.exports = router;
