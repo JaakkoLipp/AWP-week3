@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(message => {
                 document.getElementById('search-response').innerText = message;
                 if (message === 'User deleted') {
-                    // Optionally clear the displayed user information
                     document.getElementById('search-response').innerHTML = '';
                 }
             })
