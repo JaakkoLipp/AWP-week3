@@ -1,4 +1,3 @@
-// Example content of public/javascripts/todo.js
 document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('todo-form').addEventListener('submit', function(event) {
         event.preventDefault();
