@@ -16,36 +16,48 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+
+    
     // Event listener for the search button
     document.getElementById('search').addEventListener('click', function() {
         const name = document.getElementById('search-name').value;
 
         fetch(`/user/${encodeURIComponent(name)}`)
-            .then(response => response.json()) // Parse the response as JSON
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('User not found');
+                }
+                return response.json();
+            })
             .then(todo => {
                 const searchResponse = document.getElementById('search-response');
                 // Clear previous search results
                 searchResponse.innerHTML = '';
 
-                // Check if user has any todos
+                // Display the name
+                const nameElement = document.createElement('h3');
+                nameElement.textContent = todo.name;
+                searchResponse.appendChild(nameElement);
+
+                // Check if todos are available
                 if (todo.todos && todo.todos.length) {
                     // Create a list to display todos
                     const ul = document.createElement('ul');
-                    todo.todos.forEach(todo => {
+                    todo.todos.forEach(task => {
                         const li = document.createElement('li');
-                        li.textContent = todo;
+                        li.textContent = task;
                         ul.appendChild(li);
                     });
                     searchResponse.appendChild(ul);
                 } else {
-                    searchResponse.innerText = 'No todos for this user';
+                    const noTodosText = document.createElement('p');
+                    noTodosText.textContent = 'No todos for this user';
+                    searchResponse.appendChild(noTodosText);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                document.getElementById('search-response').innerText = 'User not found';
+                document.getElementById('search-response').innerText = error.message;
             });
     });
-
 
 });
