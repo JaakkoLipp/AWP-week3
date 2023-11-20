@@ -17,7 +17,49 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
 
-    
+        
+    // Function to create a Delete button
+    function createDeleteButton(name) {
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Delete User';
+        deleteButton.id = 'delete-user';
+        deleteButton.addEventListener('click', function() {
+            fetch(`/user/${encodeURIComponent(name)}`, {
+                method: 'DELETE'
+            })
+            .then(response => response.text())
+            .then(message => {
+                document.getElementById('search-response').innerText = message;
+                if (message === 'User deleted') {
+                    // Optionally clear the displayed user information
+                    document.getElementById('search-response').innerHTML = '';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+        return deleteButton;
+    }
+    // Function to handle the deletion of a task
+    function deleteTask(name, index) {
+        fetch('/user', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, index })
+        })
+        .then(response => response.text())
+        .then(message => {
+            document.getElementById('search-response').innerText = message;
+            if (message === 'Task deleted') {
+                document.getElementById('search').click();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+
     // Event listener for the search button
     document.getElementById('search').addEventListener('click', function() {
         const name = document.getElementById('search-name').value;
@@ -43,12 +85,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (todo.todos && todo.todos.length) {
                     // Create a list to display todos
                     const ul = document.createElement('ul');
-                    todo.todos.forEach(task => {
+                    todo.todos.forEach((task, index) => {
                         const li = document.createElement('li');
                         li.textContent = task;
+                        li.className = 'delete-task';
+                        li.addEventListener('click', function() {
+                            deleteTask(todo.name, index);
+                        });
                         ul.appendChild(li);
                     });
                     searchResponse.appendChild(ul);
+                    // Create and append the Delete button
+                    const deleteButton = createDeleteButton(todo.name);
+                    searchResponse.appendChild(deleteButton);
                 } else {
                     const noTodosText = document.createElement('p');
                     noTodosText.textContent = 'No todos for this user';

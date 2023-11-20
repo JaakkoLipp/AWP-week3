@@ -34,4 +34,28 @@ router.get('/user/:id', (req, res) => {
   console.log(name,todo);
 });
 
+router.delete('/user/:id', (req, res) => {
+  const name = req.params.id;
+  const index = data.findIndex(u => u.name === name);
+
+  if (index > -1) {
+      data.splice(index, 1); // Remove the user from the array
+      res.send('User deleted');
+  } else {
+      res.status(404).send('User not found');
+  }
+});
+
+router.put('/user', (req, res) => {
+  const { name, index } = req.body; // Destructure the name and index from the request body
+  const user = data.find(u => u.name === name);
+
+  if (user && user.todos && index >= 0 && index < user.todos.length) {
+      user.todos.splice(index, 1); // Remove the todo at the specified index
+      res.send('Task deleted');
+  } else {
+      res.status(404).send('User not found');
+  }
+});
+
 module.exports = router;
